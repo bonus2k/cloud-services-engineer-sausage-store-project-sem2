@@ -19,7 +19,8 @@ frontend:
     path: /
     pathType: Prefix
   containerPort: 80
-  image: YOUR_DOCKERHUB/sausage-frontend:latest
+  image: bonus2k/sausage-store-frontend
+  version: 1.0
   resources:
     requests:
       memory: "128Mi"
@@ -46,7 +47,8 @@ backend:
   replicas: 1
   strategy:
   ### Опишите стратегию RollingUpdate для бэкенда
-  image: YOUR_DOCKERHUB/sausage-backend:latest
+  image: bonus2k/sausage-store-backend
+  version: 1.0
   imagePullPolicy: Always
   resources:
     requests:
@@ -67,6 +69,9 @@ backend-report:
 ### Приложение использует переменную PORT - порт, на котором оно запустится и DB - Uri-подключение к mongodb. 
 ### DB положите в Secret, PORT в ConfigMap
 ### Опишите HPA для backend-report
+  env:
+    image: bonus2k/sausage-store-backend-report
+    version: 1.0
 
 infra:
   postgresql:
