@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: {{ .Values.image }}
+          image: {{ .Values.image }}:{{ .Values.version }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           resources:
 {{ toYaml .Values.resources | indent 12 }} 

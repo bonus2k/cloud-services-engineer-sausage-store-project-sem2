@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: {{ .Values.image }}
+          image: {{ .Values.image }}:{{ .Values.version}}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           env:
             - name: SPRING_DATASOURCE_URL
@@ -66,21 +66,21 @@ spec:
               containerPort: {{ .Values.containerPort }}
           livenessProbe:
 {{ toYaml .Values.livenessProbe | indent 12 }} 
-      volumes:
-      - name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
-        configMap:
-          name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
-          items:
-            - key: postgres_uri
-              path: postgres_uri
-            - key: postgres_user
-              path: postgres_user
-            - key: postgres_password
-              path: postgres_password
-            - key: report_path
-              path: report_path
-            - key: log_path
-              path: log_path
+{{/*      volumes:*/}}
+{{/*      - name: {{ .Release.Name }}-{{ .Chart.Name }}-conf*/}}
+{{/*        configMap:*/}}
+{{/*          name: {{ .Release.Name }}-{{ .Chart.Name }}-conf*/}}
+{{/*          items:*/}}
+{{/*            - key: postgres_uri*/}}
+{{/*              path: postgres_uri*/}}
+{{/*            - key: postgres_user*/}}
+{{/*              path: postgres_user*/}}
+{{/*            - key: postgres_password*/}}
+{{/*              path: postgres_password*/}}
+{{/*            - key: report_path*/}}
+{{/*              path: report_path*/}}
+{{/*            - key: log_path*/}}
+{{/*              path: log_path*/}}
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
