@@ -77,8 +77,8 @@ jobs:
 
       - name: Package Helm Chart
         run: |
-          helm dependency update ./sausage-store
-          helm package ./sausage-store --destination ./chart-dist
+          helm dependency update ./sausage-store-chart
+          helm package ./sausage-store-chart --destination ./chart-dist
 
       - name: Upload Helm Chart to Nexus
         run: |
