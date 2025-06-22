@@ -20,7 +20,7 @@ frontend:
     pathType: Prefix
   containerPort: 80
   image: bonus2k/sausage-store-frontend
-  version: "1.0"
+  version: "latest"
   resources:
     requests:
       memory: "64Mi"
@@ -37,11 +37,12 @@ backend:
     scrape: "true"
   env:
     postgresUri: jdbc:postgresql://postgres:5432/sausage-store
-    postgresUser: user
-    postgresPassword: password
-    mongodbUri: mongodb://root:rootpassword@mongodb:27017/sausage-store?authSource=admin
     reportPath: /logs/reports
     logPath: /logs
+  secret:
+    vaultToken:
+      name: sausage-store-secret
+      key: VAULT_TOKEN
   service:
     port: 8080
   revisionHistoryLimit: 15
@@ -53,7 +54,7 @@ backend:
       maxUnavailable: 1
       maxSurge: 1
   image: bonus2k/sausage-store-backend
-  version: "1.0"
+  version: "latest"
   imagePullPolicy: Always
   resources:
     requests:
@@ -92,8 +93,10 @@ backend-report:
 ### Приложение использует переменную PORT - порт, на котором оно запустится и DB - Uri-подключение к mongodb. 
 ### DB положите в Secret, PORT в ConfigMap
 ### Опишите HPA для backend-report
-  env:
-    mongodbUri: mongodb://root:rootpassword@mongodb:27017
+  secret:
+    mongodbUri:
+      name: sausage-store-secret
+      key: MONGODB_URI
   service:
     port: 8080
   revisionHistoryLimit: 15
@@ -101,7 +104,7 @@ backend-report:
   strategy:
     type: Recreate
   image: bonus2k/sausage-store-backend-report
-  version: "1.0"
+  version: "latest"
   imagePullPolicy: Always
   resources:
     requests:
@@ -129,8 +132,13 @@ infra:
   postgresql:
     env:
       POSTGRES_DB: sausage-store
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+    secret:
+      postgresUsername:
+        name: sausage-store-secret
+        key: POSTGRES_USER
+      postgresPassword:
+        name: sausage-store-secret
+        key: POSTGRES_PASSWORD
     containerPort: 5432
     resources:
       requests:
@@ -141,9 +149,13 @@ infra:
         cpu: "500m"
   ### Опишите необходимые переменные для развертывания PostgresQL в кластере Kubernetes
   mongodb:
-    env:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    secret:
+      mongodbUsername:
+        name: sausage-store-secret
+        key: MONGO_INITDB_ROOT_USERNAME
+      mongodbPassword:
+        name: sausage-store-secret
+        key: MONGO_INITDB_ROOT_PASSWORD
     containerPort: 27017
     resources:
       requests:

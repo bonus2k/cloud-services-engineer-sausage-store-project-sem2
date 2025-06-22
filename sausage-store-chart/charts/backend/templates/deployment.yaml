@@ -39,16 +39,6 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
                   key: postgres_uri
-            - name: SPRING_DATASOURCE_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
-                  key: postgres_user
-            - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
-                  key: postgres_password
             - name: REPORT_PATH
               valueFrom:
                 configMapKeyRef:
@@ -59,11 +49,11 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
                   key: log_path
-            - name: SPRING_DATA_MONGODB_URI
+            - name: VAULT_TOKEN
               valueFrom:
-                configMapKeyRef:
-                  name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
-                  key: mongodb_uri
+                secretKeyRef:
+                  name: {{ .Values.secret.vaultToken.name }}
+                  key: {{ .Values.secret.vaultToken.key }}
           resources:
 {{ toYaml .Values.resources | indent 12 }} 
           ports:

@@ -32,9 +32,9 @@ spec:
           env:
             - name: DB
               valueFrom:
-                configMapKeyRef:
-                  name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
-                  key: mongodb_uri
+                secretKeyRef:
+                  name: {{ .Values.secret.mongodbUri.name }}
+                  key: {{ .Values.secret.mongodbUri.key }}
             - name: PORT
               value: "{{ .Values.containerPort}}"
           resources:
