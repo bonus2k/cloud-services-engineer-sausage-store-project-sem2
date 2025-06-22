@@ -39,6 +39,7 @@ backend:
     postgresUri: jdbc:postgresql://postgres:5432/sausage-store
     postgresUser: user
     postgresPassword: password
+    mongodbUri: mongodb://root:rootpassword@mongodb:27017/sausage-store?authSource=admin
     reportPath: /logs/reports
     logPath: /logs
   service:
@@ -64,6 +65,13 @@ backend:
   containerPort: 8080
   livenessProbe:
   ### Опишите LivenessProbe для бэкенда
+    httpGet:
+      path: /actuator/health/liveness
+      port: 8080
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
   vpa:
   ### Опишите VPA для бэкенда
     updatePolicy:
@@ -91,10 +99,7 @@ backend-report:
   revisionHistoryLimit: 15
   replicas: 1
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 1
+    type: Recreate
   image: bonus2k/sausage-store-backend-report
   version: "1.0"
   imagePullPolicy: Always
@@ -107,6 +112,13 @@ backend-report:
       cpu: "500m"
   containerPort: 8080
   livenessProbe:
+    httpGet:
+      path: /api/v1/health
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 5
+    timeoutSeconds: 5
+    failureThreshold: 3
   hpa:
     averageUtilization: 50
     minReplicas: 1

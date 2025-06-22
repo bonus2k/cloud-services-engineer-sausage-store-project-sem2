@@ -43,22 +43,7 @@ spec:
             - name: {{ .Chart.Name }}
               containerPort: {{ .Values.containerPort }}
           livenessProbe:
-{{ toYaml .Values.livenessProbe | indent 12 }} 
-{{/*      volumes:*/}}
-{{/*      - name: {{ .Release.Name }}-{{ .Chart.Name }}-conf*/}}
-{{/*        configMap:*/}}
-{{/*          name: {{ .Release.Name }}-{{ .Chart.Name }}-conf*/}}
-{{/*          items:*/}}
-{{/*            - key: postgres_uri*/}}
-{{/*              path: postgres_uri*/}}
-{{/*            - key: postgres_user*/}}
-{{/*              path: postgres_user*/}}
-{{/*            - key: postgres_password*/}}
-{{/*              path: postgres_password*/}}
-{{/*            - key: report_path*/}}
-{{/*              path: report_path*/}}
-{{/*            - key: log_path*/}}
-{{/*              path: log_path*/}}
+{{ toYaml .Values.livenessProbe | indent 12 }}
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler

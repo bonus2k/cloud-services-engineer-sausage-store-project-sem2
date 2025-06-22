@@ -59,28 +59,18 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
                   key: log_path
+            - name: SPRING_DATA_MONGODB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
+                  key: mongodb_uri
           resources:
 {{ toYaml .Values.resources | indent 12 }} 
           ports:
             - name: {{ .Chart.Name }}
               containerPort: {{ .Values.containerPort }}
           livenessProbe:
-{{ toYaml .Values.livenessProbe | indent 12 }} 
-{{/*      volumes:*/}}
-{{/*      - name: {{ .Release.Name }}-{{ .Chart.Name }}-conf*/}}
-{{/*        configMap:*/}}
-{{/*          name: {{ .Release.Name }}-{{ .Chart.Name }}-conf*/}}
-{{/*          items:*/}}
-{{/*            - key: postgres_uri*/}}
-{{/*              path: postgres_uri*/}}
-{{/*            - key: postgres_user*/}}
-{{/*              path: postgres_user*/}}
-{{/*            - key: postgres_password*/}}
-{{/*              path: postgres_password*/}}
-{{/*            - key: report_path*/}}
-{{/*              path: report_path*/}}
-{{/*            - key: log_path*/}}
-{{/*              path: log_path*/}}
+{{ toYaml .Values.livenessProbe | indent 12 }}
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
