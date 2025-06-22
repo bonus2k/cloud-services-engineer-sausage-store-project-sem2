@@ -1,36 +1,77 @@
-# Sausage Store
+# Sausage Store Project (Semester 2)
 
-![image](https://user-images.githubusercontent.com/9394918/121517767-69db8a80-c9f8-11eb-835a-e98ca07fd995.png)
+📦 **Проект: Сосисочная**  
+🧑‍🎓 *Выполнен в рамках второго семестра по курсу Cloud Services Engineer.*
 
+---
 
-## Technologies used
+## 📋 Состав проекта
 
-* Frontend – TypeScript, Angular.
-* Backend  – Java 16, Spring Boot, Spring Data.
-* Database – H2.
+Микросервисная система, включающая:
 
-## Installation guide
-### Backend
+- **Backend** — Java Spring Boot, работа с PostgreSQL, миграции Flyway
+- **Backend-report** — Go-приложение для отчетов, работает с MongoDB
+- **Frontend** — Angular SPA, деплой через Nginx
+- **Infra** — Helm-чарт для PostgreSQL и MongoDB
 
-Install Java 16 and maven and run:
+---
+
+## 🚀 Запуск в Kubernetes
+
+Проект разворачивается с помощью Helm-чарта `sausage-store-chart`, включающего 4 компонента:
+
+- `backend`
+- `backend-report`
+- `frontend`
+- `infra` (PostgreSQL, MongoDB)
+
+### Установка:
 
 ```bash
-cd backend
-mvn package
-cd target
-java -jar sausage-store-0.0.1-SNAPSHOT.jar
+helm install sausage-store ./sausage-store-chart
 ```
 
-### Frontend
-
-Install NodeJS and npm on your computer and run:
+Для удаления:
 
 ```bash
-cd frontend
-npm install
-npm run build
-npm install -g http-server
-sudo http-server ./dist/frontend/ -p 80 --proxy http://localhost:8080
+helm uninstall sausage-store
 ```
 
-Then open your browser and go to [http://localhost](http://localhost)
+---
+
+## 📦 Vault
+
+В проект интегрирован HashiCorp Vault:
+
+- Используется `spring.config.import=vault://...` (Config Data API)
+- Чувствительные данные (`username`, `password`, `mongodb.uri`) хранятся в Vault
+- `application.properties` не содержит паролей напрямую
+
+---
+
+## 📊 Автоматическое масштабирование и мониторинг
+
+- `backend` использует **VerticalPodAutoscaler**
+- `backend-report` — **HorizontalPodAutoscaler**
+- `LivenessProbe` реализована для обоих приложений
+- Настроены `resources.requests` и `resources.limits`
+
+---
+
+## ⚙️ CI/CD и Helm
+
+- Присутствует `Chart.yaml` и `values.yaml`
+- Поддержка `helm lint` и `helm install`
+- Helm-чарт публикуется в Nexus (`helm(hosted)`, `Allow redeploy`)
+- Используются шаблоны `{{ .Values }}`, `{{ .Release.Name }}` и др.
+
+---
+
+## 🧪 Проверка
+
+- Все Dockerfile'ы проходят сборку
+- Миграции Flyway выполняются корректно
+- Приложение разворачивается в Kubernetes
+- Фронтенд отображает список сосисок, можно оформить заказ
+
+
