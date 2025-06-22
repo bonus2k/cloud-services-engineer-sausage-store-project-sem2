@@ -19,7 +19,7 @@ frontend:
     path: /
     pathType: Prefix
   containerPort: 80
-  image: bonus2k/sausage-store-frontend
+  image: bonus2k/sausage-frontend
   version: "latest"
   resources:
     requests:
@@ -53,7 +53,7 @@ backend:
     rollingUpdate:
       maxUnavailable: 1
       maxSurge: 1
-  image: bonus2k/sausage-store-backend
+  image: bonus2k/sausage-backend
   version: "latest"
   imagePullPolicy: Always
   resources:
@@ -103,7 +103,7 @@ backend-report:
   replicas: 1
   strategy:
     type: Recreate
-  image: bonus2k/sausage-store-backend-report
+  image: bonus2k/sausage-backend-report
   version: "latest"
   imagePullPolicy: Always
   resources:
